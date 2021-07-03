@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Management</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <html lang="en-US">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.angularjs.org/1.8.2/angular-resource.js"></script>    
+    <script src = "./app/services/userDataService.js"></script>
+    <script src = "./app/components/mainController.js"></script>
+</head>
+<body>
+<section ng-app="userMgrApp" ng-controller="mainController"  ng-cloak>
+    <div class="container">
+        <h2>User Management</h2>
+        <br>
+        <br ng-if="users === undefinied || users.length === 0">
+            <p>
+                <b>Warning!</b> </br>
+                The users are stored in a JSON file, that can not be accessed now. </br>
+                (may you try to run it locally? move this project to a https server or you can find the same code on <a href="https://plnkr.co/plunk/Eq6XHLISv93YiLtf" target="_blank">Plunker</a>)
+            </p>
+        </div>
+        <div ng-if="users != undefinied && users.length > 0">
+            <p>Search: <input type = "text" ng-model = "nameFilter"></p>
+            <table class="table table-striped table-inverse table-responsive  w-auto">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>
+                        <a href="#" ng-click="orderByField='name'; orderDesc = !orderDesc" >
+                            Name <span><i ng-class="getFavClassIcon('name')" aria-hidden="true"></i></span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" ng-click="orderByField='age'; orderDesc = !orderDesc">
+                            Age <span><i ng-class="getFavClassIcon('age')" aria-hidden="true"></i></span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" ng-click="orderByField='registered'; orderDesc = !orderDesc">
+                            Registered Date <span><i ng-class="getFavClassIcon('registered')" aria-hidden="true"></i></span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" ng-click="orderByField='email'; orderDesc = !orderDesc">
+                            Email <span><i ng-class="getFavClassIcon('email')" aria-hidden="true"></i></span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" ng-click="orderByField='balance'; orderDesc = !orderDesc">
+                            Balance <span><i ng-class="getFavClassIcon('balance')" aria-hidden="true"></i></span>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="user in users | orderBy:orderByField:orderDesc | filter: myFilter">
+                <td>{{user.name}}<span ng-if="!user.name">-</span></td>
+                <td class="ageMinWidth">{{user.age}}<span ng-if="user.age==='' || user.age=== undefinied">-</span></td>
+                <td>{{user.registered | date:'dd-MM-yyyy HH:mm:ss'}}<span ng-if="!user.registered">-</span></td>
+                <td>{{user.email}}<span ng-if="!user.email">-</span></td>
+                <td class="balanceMinWidth">{{user.balance | currency:"£":2}}<span ng-if="user.balance==='' || user.balance=== undefinied">-</span></td>
+                </tr>
+            </tbody>
+            </table>
+            <button ng-click="resetAllBalances()">Reset Balance</button>
+        </div>
+    </div>
+  </section>
+  </body>
+  </html>
